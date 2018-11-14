@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_background"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/txtUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtPassword"
+        android:background="#fff"
+        android:hint="@string/user_name"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp" />
+
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:background="#fff"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp" />
+    <EditText
+        android:id="@+id/txtConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"
+        android:background="#fff"
+        android:hint="@string/confirm"
+        android:inputType="textPassword"
+        android:layout_below="@+id/txtPassword"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp" />
+
+    <CheckBox
+        android:id="@+id/chkSaveInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtConfirmPassword"
+        android:text="@string/show_pass"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chkSaveInfo"
+        android:text="@string/register"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtUserName"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@mipmap/lock" />
+
+
+</RelativeLayout>
