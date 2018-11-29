@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/mScan"
+    <item android:id="@+id/mRefresh"
         android:title="@string/scan"/>
     <item android:id="@+id/mHistory"
         android:title="@string/history"/>
     <item android:id="@+id/mTerminal"
         android:title="@string/terminal"/>
-    <item android:id="@+id/mSignOut"
-        android:title="@string/sign_out"/>
+    <item android:id="@+id/mSetDvName"
+        android:title="@string/set_device_name"/>
     <item android:id="@+id/mAbout"
         android:title="@string/about"/>
 

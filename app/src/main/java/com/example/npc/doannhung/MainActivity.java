@@ -13,17 +13,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BLUETOOTH = 6;
-    public static final int REQUEST_DEVICE_NAME = 66;
+    private static final int REQUEST_UNLOCK = 66;
     private static final String TAG = "Main";
+
     public static Bluetooth bt;
     public static BluetoothAdapter bluetoothAdapter;
-    //
+
+    public static String LOCK_NAME="HC-05";
+    public static final String SAVE_FILE="deviceName";
+
     private TextView txtStatus;
 
     @Override
@@ -42,22 +47,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).show();
         }
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
-        }
+
+        // init LOCK_NAME
+        // if cant find device in the sharedpreference, use the default name.
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVE_FILE,MODE_PRIVATE);
+        String name = sharedPreferences.getString(SAVE_FILE,"");
+        if(name.length()>0) LOCK_NAME = name;
 
         addControls();
         addEvents();
     }
 
     private void addEvents() {
-
+        handlingRefresh();
     }
 
     private void addControls() {
         bt = new Bluetooth(bluetoothAdapter,handler);
         txtStatus = findViewById(R.id.txtstatus);
+
     }
 
     @Override
@@ -70,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.mScan:
-                handlingScan();
+            case R.id.mRefresh:
+                handlingRefresh();
                 return true;
             case R.id.mHistory:
 
@@ -80,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,TerminalActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.mSignOut:
-                handlingSignout();
+            case R.id.mSetDvName:
+                Intent intent1 = new Intent(MainActivity.this,SetDvNameActivity.class);
+                startActivity(intent1);
                 return true;
             case R.id.mAbout:
 
@@ -90,34 +99,17 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void handlingSignout() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.SH_PRE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(LoginActivity.LOGIN_STATE, false);
-        editor.commit();
-        startActivity(intent);
-        finish();
-    }
-
-    private void handlingScan() {
-        if (bluetoothAdapter.isEnabled()) {
-            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
-            startActivityForResult(intent, REQUEST_DEVICE_NAME);
-        } else {
-            Toast.makeText(MainActivity.this, "Bluetooth is off", Toast.LENGTH_SHORT).show();
+    private void handlingRefresh() {
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+        }
+        if(bluetoothAdapter.isEnabled()){
+            // if bluetooth enabled, auto connected to HC-05
+            connectService(LOCK_NAME);
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_DEVICE_NAME && resultCode == REQUEST_DEVICE_NAME) {
-            String name = data.getStringExtra("name");
-            Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
-            connectService(name);
-        }
-    }
 
     public void connectService(String Device) {
         try {
@@ -127,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 bt.start();
                 bt.connectDevice(Device);
                 Log.d(TAG, "Btservice started - listening");
-                //txtStatus.setText("Connected");
             } else {
                 Log.w(TAG, "Btservice started - bluetooth is not enabled");
                 txtStatus.setText("Bluetooth Not enabled");
@@ -143,33 +134,57 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message msg) {
 
-            //String s = "";
             switch (msg.what) {
                 case Bluetooth.MESSAGE_STATE_CHANGE:
                     Log.d(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-                    //s = "MESSAGE_STATE_CHANGE: " + msg.arg1;
+                    switch (msg.arg1){
+                        case Bluetooth.STATE_CONNECTED:
+                            txtStatus.setText("Connected");
+                            break;
+                        case Bluetooth.STATE_NONE:
+                            txtStatus.setText("");
+                            break;
+                        case Bluetooth.STATE_CONNECTING:
+                            txtStatus.setText("Connecting...");
+                            break;
+                    }
                     break;
+
                 case Bluetooth.MESSAGE_WRITE:
                     Log.d(TAG, "MESSAGE_WRITE ");
-                    //s = "MESSAGE_WRITE ";
                     break;
                 case Bluetooth.MESSAGE_READ:
                     Log.d(TAG, "MESSAGE_READ ");
-                    //s = "MESSAGE_READ " + new String((byte[]) msg.obj);
-
                     TerminalActivity.handler_Terminal.obtainMessage(Bluetooth.MESSAGE_READ,msg.arg1,msg.arg2,msg.obj).sendToTarget();
+                    ChangeUnlockPin.handler_ChangePass.obtainMessage(Bluetooth.MESSAGE_READ,msg.arg1,msg.arg2,msg.obj).sendToTarget();
                     break;
                 case Bluetooth.MESSAGE_DEVICE_NAME:
                     Log.d(TAG, "MESSAGE_DEVICE_NAME " + msg);
-                    //s = "MESSAGE_DEVICE_NAME ";
                     break;
                 case Bluetooth.MESSAGE_TOAST:
                     Log.d(TAG, "MESSAGE_TOAST " + msg);
-                    //s = "MESSAGE_TOAST ";
                     break;
             }
-            //Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
             return false;
         }
     });
+
+    public void handlingUnlock(View view) {
+        Intent intent = new Intent(MainActivity.this,UnlockActivity.class);
+        startActivityForResult(intent,REQUEST_UNLOCK);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_UNLOCK && resultCode==REQUEST_UNLOCK){
+            String s = data.getStringExtra("PIN");
+            bt.sendMessage(s);
+        }
+    }
+
+    public void handlingChangeUnlockPin(View view) {
+        Intent intent = new Intent(MainActivity.this,ChangeUnlockPin.class);
+        startActivity(intent);
+    }
 }

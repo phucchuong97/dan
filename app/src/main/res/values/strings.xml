@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Smart Lock</string>
-    <string name="scan">Scan</string>
+    <string name="scan">Refresh</string>
     <string name="history">History</string>
     <string name="terminal">Terminal</string>
     <string name="about">About</string>
@@ -8,10 +8,7 @@
     <string name="paired_devices">Paired Devices</string>
     <string name="user_name">User name</string>
     <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="remember_me">remember me</string>
-    <string name="register">Register now</string>
     <string name="confirm">Confirm</string>
-    <string name="show_pass">show pass</string>
-    <string name="sign_out">Sign out</string>
+    <string name="show_pass">Show pass</string>
+    <string name="set_device_name">Set device name</string>
 </resources>

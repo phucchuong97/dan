@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class TerminalActivity extends AppCompatActivity {
 
-    private static ArrayList<String> data=new ArrayList<>();
+    private static ArrayList<String> data = new ArrayList<>();
     private TextView txtSend;
     private Button btnSend;
     private ListView lvSendReceive;
@@ -36,11 +36,11 @@ public class TerminalActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s =txtSend.getText().toString();
+                String s = txtSend.getText().toString();
 
                 MainActivity.bt.sendMessage(s);
 
-                data.add(s+"\n");
+                data.add(s + "\n");
                 txtSend.setText("");
                 adapter.notifyDataSetChanged();
             }
@@ -49,22 +49,22 @@ public class TerminalActivity extends AppCompatActivity {
     }
 
     private void addControls() {
-        txtSend =findViewById(R.id.txtSend);
-        btnSend =findViewById(R.id.btnSend);
+        txtSend = findViewById(R.id.txtSend);
+        btnSend = findViewById(R.id.btnSend);
         lvSendReceive = this.findViewById(R.id.lvSendReceive);
 
         data.clear();
-        adapter = new ArrayAdapter<>(TerminalActivity.this,android.R.layout.simple_list_item_1,data);
+        adapter = new ArrayAdapter<>(TerminalActivity.this, android.R.layout.simple_list_item_1, data);
         lvSendReceive.setAdapter(adapter);
     }
 
     public static Handler handler_Terminal = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            if(message.what == Bluetooth.MESSAGE_READ){
+            if (message.what == Bluetooth.MESSAGE_READ) {
                 int bytes = message.arg1;
                 byte[] buffer = (byte[]) message.obj;
-                String s = new String(buffer,0,bytes);
+                String s = new String(buffer, 0, bytes - 1);
                 showMessage(s);
             }
 
@@ -73,7 +73,9 @@ public class TerminalActivity extends AppCompatActivity {
     });
 
     private static void showMessage(String s) {
-        data.add(s+"\n");
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            data.add(s + "\n");
+            adapter.notifyDataSetChanged();
+        }
     }
 }
