@@ -12,20 +12,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TerminalActivity" />
+        <activity android:name=".activity.TerminalActivity" />
         <activity
-            android:name=".UnlockActivity"
+            android:name=".activity.UnlockActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".ChangeUnlockPin" />
-        <activity android:name=".SetDvNameActivity" />
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".activity.ChangeUnlockPin" />
+        <activity android:name=".activity.SetDvNameActivity" />
+        <activity android:name=".activity.HistoryActivity" />
+        <activity android:name=".activity.AddFingerPrintActivity" />
+        <activity android:name=".activity.DelPrintFingerActivity" />
+        <activity android:name=".activity.FingerPrintInformationActivity" />
+        <activity android:name=".activity.AboutActivity"></activity>
     </application>
 
 </manifest>

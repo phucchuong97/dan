@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Smart Lock</string>
     <string name="scan">Refresh</string>
-    <string name="history">History</string>
+    <string name="history">Unlock History</string>
     <string name="terminal">Terminal</string>
     <string name="about">About</string>
     <string name="unpaired_devices">Unpaired Devices</string>

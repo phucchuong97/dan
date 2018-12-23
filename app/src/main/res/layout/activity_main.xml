@@ -21,11 +21,40 @@
         app:srcCompat="@android:drawable/ic_secure" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnAddFingerPrint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Change unlock PIN"
-        android:onClick="handlingChangeUnlockPin"
+        android:text="Add Finger Print"
+        android:onClick="handlingAddFingerPrint"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FingerPrint Information"
+        android:onClick="handlingPeopleInfor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="History"
+        android:onClick="handlingHistory"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handlingReset"
+        android:text="Delete All FingerPrint"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handlingChangeUnlockPin"
+        android:text="Change unlock PIN"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:visibility="invisible" />
 
 </LinearLayout>
